@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import Item from './Item'
+import Item from './Item'   // Importa el componente individual
 
 
 
@@ -10,7 +10,7 @@ function List({items,deleteItem, editItem}){
     return (
 
         <ul>
-
+            {/* Recorre el arreglo de ítems y renderiza uno por uno */}
             {items.map((item)=>(
 
                 <Item

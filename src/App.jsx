@@ -18,7 +18,7 @@ function App(){
   const [itemToEdit, setItemToEdit]=useState(null);
 
 
-
+   // Cargar los ítems almacenados al iniciar la app
   useEffect(()=>{
 
     const storedItems=
@@ -30,7 +30,7 @@ function App(){
   },[]);
 
 
-
+  // Guardar ítems en localStorage cada vez que cambien
   useEffect(()=>{
 
     localStorage.setItem('items',JSON.stringify(items));
@@ -41,6 +41,7 @@ function App(){
 
   const addOrUpdateItem=(value)=>{
 
+    // Editar ítem existente
     if(itemToEdit){
 
       setItems(items.map(item=>item.id===itemToEdit.id ? {...item, value} : item));
@@ -49,6 +50,7 @@ function App(){
 
     } else {
 
+      // Agregar nuevo ítem
       setItems([...items, {id: Date.now(),value}]);
 
     }
@@ -59,6 +61,7 @@ function App(){
 
   const deleteItem=(id)=>{
 
+    // Eliminar ítem por ID
     setItems(items.filter(item=>item.id!==id));
 
   };
@@ -67,12 +70,13 @@ function App(){
 
   const editItem=(item)=>{
 
+    // Seleccionar ítem para editar
     setItemToEdit(item);
 
   };
 
 
-
+  // Muestra el título, el formulario y la lista de ítems
   return (
 
     <div className="App">

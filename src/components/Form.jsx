@@ -7,16 +7,16 @@ function Form({ addOrUpdateItem, itemToEdit }) {
     const [inputValue, setInputValue] = useState('');
 
 
-
+    // Actualiza el campo del formulario si hay un item para editar
     useEffect(() => {
 
         if (itemToEdit) {
 
-            setInputValue(itemToEdit.value);
+            setInputValue(itemToEdit.value);    // Llena el input con el valor actual
 
         } else {
 
-            setInputValue('');
+            setInputValue('');      // Limpia el input si no se está editando
 
         }
 
@@ -26,21 +26,21 @@ function Form({ addOrUpdateItem, itemToEdit }) {
 
     const handleSubmit = (e) => {
 
-        e.preventDefault();
+        e.preventDefault();     // Previene recarga de página
 
         if (inputValue.trim()) {
 
-            addOrUpdateItem(inputValue);
+            addOrUpdateItem(inputValue);        // Llama función para agregar o actualizar
 
-            setInputValue('');
+            setInputValue('');          // Limpia el input luego de guardar
 
         }
 
     };
 
 
-
-    return (
+    // Muestra un formulario con un input y un botón para agregar o editar un ítem
+    return (        
 
         <form onSubmit={handleSubmit}>
 
