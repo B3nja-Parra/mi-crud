@@ -1,32 +1,27 @@
+import React from 'react'; // Importa React para poder usar JSX
 
-import React from 'react';
+function Item({ item, deleteItem, editItem }) {
+  return (
+    <li className="item"> {/* Cada alumno se representa como un elemento */}
+      
+      <div className="item-info"> {/* Contenedor de la información del alumno */}
+        <p><strong>Alumno:</strong> <strong>{item.nombre}</strong></p> 
+        <p>Asignatura: {item.asignatura}</p> 
+        <p>Promedio: <strong>{item.promedio}</strong> </p> 
+        <p className='apreciacion-color'>{item.apreciacion}</p> 
+      </div>
 
+      <div className="item-actions"> {/* Contenedor de los botones de acción */}
 
+        <button onClick={() => editItem(item)} className="btn edit-btn">Editar</button>
 
-function Item({item, deleteItem, editItem}){
-
-    return (
-
-        <li>
-            {/* Muestra el valor del ítem */}
-            {item.value}
-
-            {/* Botón para editar: llama a editItem pasando todo el objeto item */}
-            <button onClick={()=>editItem(item)}>Editar</button>
-
-            {/* Botón para eliminar: llama a deleteItem con el id del ítem */}
-            <button onClick={()=>deleteItem(item.id)}>Eliminar</button>
-
-        </li>
-
-    );
-
+        {/* Botón para eliminar*/}
+        <button onClick={() => deleteItem(item.id)} className="btn delete-btn">Eliminar</button>
+      </div>
+      
+    </li>
+  );
 }
 
-
-
-export default Item;
-
-
-
+export default Item; 
 

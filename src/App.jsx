@@ -1,106 +1,90 @@
+import { useState, useEffect } from 'react'; // Importa hooks
+import Form from './components/Form'; // Importa Formulario
+import List from './components/List'; // Importa Lista
+import './App.css'; // Importa estilos
 
-import { useState, useEffect }  from 'react';
+function App() {
+  const [items, setItems] = useState([]); // Lista de alumnos
+  const [itemToEdit, setItemToEdit] = useState(null); // Alumno que se está editando
 
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem('items')) || []; // Lee los datos guardados
+    setItems(storedItems); 
+  }, []);
 
-
-import Form from './components/Form';
-
-import List from './components/List';
-
-import './App.css';
-
-
-
-function App(){
-
-  const [items,setItems]=useState([]);
-
-  const [itemToEdit, setItemToEdit]=useState(null);
-
-
-   // Cargar los ítems almacenados al iniciar la app
-  useEffect(()=>{
-
-    const storedItems=
-
-    JSON.parse(localStorage.getItem('items')) || [];
-
-    setItems(storedItems);
-
-  },[]);
-
-
-  // Guardar ítems en localStorage cada vez que cambien
-  useEffect(()=>{
-
-    localStorage.setItem('items',JSON.stringify(items));
-
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(items)); // Guarda en localStorage cada vez que se actualizan los datos
   }, [items]);
 
+  const calcularApreciacion = (promedio) => { // Según el promedio, da un mensaje
+    if (promedio >= 6.5) return 'Destacado';
+    if (promedio >= 5.6) return 'Buen trabajo';
+    if (promedio >= 4.0) return 'Con mejora';
+    return 'Deficiente';
+  };
 
+  const addOrUpdateItem = (data) => { // Agrega o actualiza un alumno
+    const apreciacion = calcularApreciacion(parseFloat(data.promedio));
+    const nuevoItem = { ...data, promedio: parseFloat(data.promedio), apreciacion };
 
-  const addOrUpdateItem=(value)=>{
-
-    // Editar ítem existente
-    if(itemToEdit){
-
-      setItems(items.map(item=>item.id===itemToEdit.id ? {...item, value} : item));
-
-      setItemToEdit(null);
-
+    if (itemToEdit) {
+      // Si se está editando, actualiza el item existente
+      setItems(items.map(item => item.id === itemToEdit.id ? { ...nuevoItem, id: item.id } : item));
+      setItemToEdit(null); 
     } else {
-
-      // Agregar nuevo ítem
-      setItems([...items, {id: Date.now(),value}]);
-
+      // Si es nuevo, agrega con un ID único
+      setItems([...items, { ...nuevoItem, id: Date.now() }]);
     }
-
   };
 
+  const deleteItem = (id) => {
+  // Si el ítem que se está editando es el que se va a eliminar
+  if (itemToEdit && itemToEdit.id === id) {
+    setItemToEdit(null);
+  }
 
-
-  const deleteItem=(id)=>{
-
-    // Eliminar ítem por ID
-    setItems(items.filter(item=>item.id!==id));
-
+  //  eliminar el ítem normalmente
+  setItems(items.filter(item => item.id !== id));
   };
 
-
-
-  const editItem=(item)=>{
-
-    // Seleccionar ítem para editar
+  const editItem = (item) => {
     setItemToEdit(item);
-
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', 
+    });
   };
 
-
-  // Muestra el título, el formulario y la lista de ítems
   return (
+    <div className="escala-general"> 
+      <>
+        <h1 className="titulo-centro">
+          Evaluación de Alumnos 
+        </h1>
 
-    <div className="App">
+        <div className="App"> 
+          <h2 className='edit-agreg-eva'>
+            {itemToEdit ? 'Editar Evaluación' : 'Agregar Nueva Evaluación'} {/* Título dinámico según si se edita o agrega */}
+          </h2>
 
-      <h1>CRUD con LocalStorage</h1>
+          {/* Formulario para agregar o editar alumnos */}
+          <Form addOrUpdateItem={addOrUpdateItem} itemToEdit={itemToEdit} />
+        </div>
 
-      <Form 
+        <div className="alumnos-container"> {/* Sección de alumnos guardados */}
+          <h2 className='eva-guard-text'>Evaluaciones Almacenadas</h2>
 
-      addOrUpdateItem={addOrUpdateItem}
-
-      itemToEdit={itemToEdit} />
-
-      <List items={items}
-
-      deleteItem={deleteItem} editItem={editItem} />
-
-      </div>
-
+          {/* Si no hay alumnos, muestra un mensaje. Si hay, muestra la lista */}
+          {items.length === 0 ? (
+            <p className='mensaje-no-eva'>No existen evaluaciones</p>
+          ) : (
+            <List items={items} editItem={editItem} deleteItem={deleteItem} />
+          )}
+        </div>
+      </>
+    </div>
   );
-
-
-
 }
-
 
 
 export default App;
